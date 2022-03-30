@@ -4,17 +4,27 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    public bool showGyroscope;
     public Transform target;
     public float distanceUp = 1;
     public float distanceBack = 4;
     public float speed = 5;
     public float currentDist;
     public Thumbstick thumbstick;
+    Gyroscope gyro;
+    
 
     // Start is called before the first frame update
     void Start()
     {
-        currentDist = distanceBack;    
+        currentDist = distanceBack;
+        
+        gyro = Input.gyro;
+        if (gyro != null && SystemInfo.supportsGyroscope)
+        {
+            gyro.enabled = true;
+        }
+       
     }
 
     // Update is called once per frame
@@ -22,8 +32,14 @@ public class CameraController : MonoBehaviour
     {
         Vector2 input = Vector2.zero;
 #if UNITY_ANDROID
-        input.x = thumbstick.xAxis;
-        input.y = thumbstick.yAxis;
+        //input.x = thumbstick.xAxis;
+        //input.y = thumbstick.yAxis;
+
+        input.x = gyro.rotationRate.x;
+        input.y = gyro.rotationRate.y;
+
+        
+
 #else
         if (Input.GetMouseButton(1))
         {
